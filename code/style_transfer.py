@@ -98,9 +98,14 @@ class StyleServiceML(object):
     @classmethod
     def get_model(cls, path=None):
         """Get the model object for this instance, loading it if it's not already loaded."""
-        if cls.model == None:
-            with open(os.path.join(model_path, 'tensor.pt'), 'rb') as inp:
-                cls.model = torch.load(inp)
+        if not path:
+            if cls.model == None:
+                with open(os.path.join(model_path, 'tensor.pt'), 'rb') as inp:
+                    cls.model = torch.load(inp)
+        else:
+            if cls.model == None:
+                with open(os.path.join(path, 'tensor.pt'), 'rb') as inp:
+                    cls.model = torch.load(inp)
         return cls.model
 
     @classmethod
@@ -113,7 +118,7 @@ class StyleServiceML(object):
         try:
             cnn = cls.get_model()
         except:
-            cnn = cls.get_model(res_data["mod_path"])
+            cnn = cls.get_model(path=res_data["mod_path"])
         print(res_data)
         prefix = res_data["blob_path"]  
         base_out_path = prefix + "output/"
