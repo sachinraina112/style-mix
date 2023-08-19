@@ -31,9 +31,6 @@ jobs:
     - name: RunContainer
       run: sudo docker run -p 9999:9999 --mount type=bind,source=/home/adminuser/actions-runner/_work/style-mix/style-mix,target=/style-content style-mix:$GITHUB_RUN_ID 
     - uses: actions/checkout@v1
-    - name: move models
-      run: sudo mv /home/adminuser/actions-runner/_work/style-mix/models /home/adminuser/actions-runner/_work/style-mix/style-mix/ 
-    - uses: actions/checkout@v1
     - name: check status
       if: steps[*].outcome == 'cancelled' || ${{ cancelled() }}
       run: exit 0
