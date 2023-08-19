@@ -1,0 +1,5 @@
+flask==2.2.2
+gevent==22.10.2
+gunicorn==20.1.0
+Pillow
+matplotlib
