@@ -38,7 +38,7 @@ jobs:
     needs: [job0-install, job1-build, job2-run]
     runs-on: self-hosted
     continue-on-error: true
-    timeout-minutes: 1.5
+    timeout-minutes: 1
     steps:
     - uses: actions/checkout@v1
     - name: move models
