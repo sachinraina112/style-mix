@@ -87,7 +87,7 @@ def get_styled_image(pre_trained_model, mean_tn, std_tn, con_im, sty_im,
 
 # prefix = '/ml/'
 prefix = '../data/'
-model_path = '../../models'
+model_path = '../models'
 
 # A singleton for holding the model. This simply loads the model and holds it.
 # It has a predict function that does a prediction based on the model and the input data.
@@ -118,6 +118,7 @@ class StyleServiceML(object):
         try:
             cnn = cls.get_model()
         except:
+            print(path)
             cnn = cls.get_model(path=res_data["mod_path"])
         print(res_data)
         prefix = res_data["blob_path"]  
