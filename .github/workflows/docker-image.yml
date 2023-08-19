@@ -37,5 +37,17 @@ jobs:
     - name: check status
       if: steps[*].outcome == 'cancelled' || ${{ cancelled() }}
       run: exit 0
+  job3-move:
+    needs: [job0-install, job1-build, job2-run]
+    runs-on: self-hosted
+    continue-on-error: true
+    timeout-minutes: 1.5
+    steps:
+    - uses: actions/checkout@v1
+    - name: move models
+      run: sudo cp -r /home/adminuser/actions-runner/_work/models /home/adminuser/actions-runner/_work/style-mix/style-mix/ 
+   
+    
+    
     
     

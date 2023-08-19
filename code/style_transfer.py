@@ -118,8 +118,9 @@ class StyleServiceML(object):
         try:
             cnn = cls.get_model()
         except:
+            path=res_data["mod_path"]
             print(path)
-            cnn = cls.get_model(path=res_data["mod_path"])
+            cnn = cls.get_model(path=path)
         print(res_data)
         prefix = res_data["blob_path"]  
         base_out_path = prefix + "output/"
