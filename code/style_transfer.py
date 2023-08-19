@@ -87,7 +87,7 @@ def get_styled_image(pre_trained_model, mean_tn, std_tn, con_im, sty_im,
 
 # prefix = '/ml/'
 prefix = '../data/'
-model_path = '../models'
+model_path = '../../models'
 
 # A singleton for holding the model. This simply loads the model and holds it.
 # It has a predict function that does a prediction based on the model and the input data.
@@ -96,7 +96,7 @@ class StyleServiceML(object):
     model = None                # Where we keep the model when it's loaded
 
     @classmethod
-    def get_model(cls):
+    def get_model(cls, path=None):
         """Get the model object for this instance, loading it if it's not already loaded."""
         if cls.model == None:
             with open(os.path.join(model_path, 'tensor.pt'), 'rb') as inp:
@@ -110,7 +110,10 @@ class StyleServiceML(object):
         Args:
             input (a pandas dataframe): The data on which to do the predictions. There will be
                 one prediction per row in the dataframe"""
-        cnn = cls.get_model()
+        try:
+            cnn = cls.get_model()
+        except:
+            cnn = cls.get_model(res_data["mod_path"])
         print(res_data)
         prefix = res_data["blob_path"]  
         base_out_path = prefix + "output/"
