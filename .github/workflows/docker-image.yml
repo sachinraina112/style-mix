@@ -19,6 +19,9 @@ jobs:
     needs: job0-install
     steps:   
     - uses: actions/checkout@v1
+    - name: Stops running container on port
+      run: sudo chmod +777 code/* && sudo bash code/stop_port.sh 9999
+    - uses: actions/checkout@v1
     - name: Build the Docker image
       run: sudo docker build -t style-mix:$GITHUB_RUN_ID .
   job2-run:
