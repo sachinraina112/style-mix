@@ -1,6 +1,8 @@
 name: Docker Image CI
 env:
   ip: ${{vars.SERVER_IP}}
+  mod_path: /home/adminuser/actions-runner/_work/style-mix/style-mix/models/
+  port: 9999
 on:
   push:
     branches: [ "master" ]
@@ -12,6 +14,9 @@ jobs:
     runs-on: self-hosted
     steps:
     - uses: actions/checkout@v1
+    - name: Remove model for git cleanup
+      run:  sudo rm -r -f $mod_path
+    - uses: actions/checkout@v1
     - name: Install Docker
       run: sudo chmod +777 code/* && sudo ./code/install_docker.sh
   job1-build:
@@ -20,7 +25,7 @@ jobs:
     steps:   
     - uses: actions/checkout@v1
     - name: Stops running container on port
-      run: sudo chmod +777 code/* && sudo bash code/stop_port.sh 9999
+      run: sudo chmod +777 code/* && sudo bash code/stop_port.sh $port
     - uses: actions/checkout@v1
     - name: Build the Docker image
       run: sudo docker build -t style-mix:$GITHUB_RUN_ID .
@@ -32,7 +37,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: RunContainer
-      run: sudo docker run -p 9999:9999 --mount type=bind,source=/home/adminuser/actions-runner/_work/style-mix/style-mix,target=/style-content style-mix:$GITHUB_RUN_ID 
+      run: sudo docker run -p $port:$port --mount type=bind,source=/home/adminuser/actions-runner/_work/style-mix/style-mix,target=/style-content style-mix:$GITHUB_RUN_ID 
     - uses: actions/checkout@v1
     - name: check status
       if: steps[*].outcome == 'cancelled' || ${{ cancelled() }}
