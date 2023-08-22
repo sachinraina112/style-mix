@@ -16,7 +16,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Remove model for git cleanup check again
-      run: sudo chmod +777 code/* && /bin/sh code/remove.sh
+      run: sudo chmod +777 code/* && /bin/sh code/remove.sh $mod_path
     - uses: actions/checkout@v1
     - name: Install Docker
       run: sudo /bin/sh code/install_docker.sh
@@ -26,7 +26,7 @@ jobs:
     steps:   
     - uses: actions/checkout@v1
     - name: Stops running container on port
-      run: sudo chmod +777 code/* && sudo /bin/sh code/stop_port.sh $port
+      run: sudo chmod +777 code/* && sudo /bin/bash code/stop_port.sh $port
     - uses: actions/checkout@v1
     - name: Build the Docker image
       run: sudo docker build -t style-mix:$GITHUB_RUN_ID .

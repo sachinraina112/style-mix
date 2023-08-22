@@ -4,6 +4,7 @@ echo "Removing Model Folder"
     sudo chmod +777 $1
     sudo rm -r -f $1
     #save your output
-
+    echo "Removed"
 } || { echo "Model path already not there"
 } 
+
