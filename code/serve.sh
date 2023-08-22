@@ -1,4 +1,4 @@
-#/bin/sh
+#!/bin/sh
 echo "Serving Inference"
 { # try
 
