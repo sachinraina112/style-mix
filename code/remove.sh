@@ -1,4 +1,4 @@
-#/bin/bash
+#/bin/sh
 echo "Removing Model Folder"
 { # try
     sudo chmod +777 $1

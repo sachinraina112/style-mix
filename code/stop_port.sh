@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 for id in $(docker ps -q)
 do
