@@ -4,7 +4,7 @@ RUN mkdir style-mix
 WORKDIR /style-mix
 ADD data/ /style-mix/data/
 ADD code/ /style-mix/code/
-ADD models/ /style-mix/models/
+# ADD models/ /style-mix/models/
 COPY requirements_st.txt /style-mix/requirements_st.txt
 
 RUN apt-get -y update && apt-get install -y --no-install-recommends \
