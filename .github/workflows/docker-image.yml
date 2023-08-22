@@ -47,9 +47,6 @@ jobs:
     continue-on-error: true
     timeout-minutes: 1
     steps:
-    - uses: actions/checkout@v1
-    - name: Run streamlit
-      run: docker build -t str_im -f sl/Dockerfile_st . && docker run -p 8501:8501 --mount type=bind,source=$base_path,target=/style-mix str_im 
     - name: move models
       run: sudo cp -r /home/adminuser/actions-runner/_work/models /home/adminuser/actions-runner/_work/style-mix/style-mix 
     - name: give permission  

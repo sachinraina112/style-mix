@@ -7,5 +7,5 @@ path_config:
   data: ../data/
   model: ../models/
 url_config:
-  ip: localhost
+  ip: 20.219.92.5
   port: 9999
