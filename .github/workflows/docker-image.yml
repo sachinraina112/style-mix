@@ -2,6 +2,7 @@ name: Docker Image CI
 env:
   ip: ${{vars.SERVER_IP}}
   mod_path: /home/adminuser/actions-runner/_work/style-mix/style-mix/models/
+  base_path: /home/adminuser/actions-runner/_work/
   port: 9999
 on:
   push:
@@ -15,17 +16,17 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Remove model for git cleanup check again
-      run: sudo rm -r -f $mod_path
+      run: sudo chmod +777 code/* && ./code/remove.sh
     - uses: actions/checkout@v1
     - name: Install Docker
-      run: sudo chmod +777 code/* && sudo ./code/install_docker.sh
+      run: sudo ./code/install_docker.sh
   job1-build:
     runs-on: self-hosted
     needs: job0-install
     steps:   
     - uses: actions/checkout@v1
     - name: Stops running container on port
-      run: sudo chmod +777 code/* && sudo bash code/stop_port.sh $port
+      run: sudo chmod +777 code/* && sudo sh code/stop_port.sh $port
     - uses: actions/checkout@v1
     - name: Build the Docker image
       run: sudo docker build -t style-mix:$GITHUB_RUN_ID .
@@ -37,7 +38,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: RunContainer
-      run: sudo docker run -p $port:$port --mount type=bind,source=/home/adminuser/actions-runner/_work/style-mix/style-mix,target=/style-content style-mix:$GITHUB_RUN_ID 
+      run: sudo docker run -p $port:$port --mount type=bind,source=$base_path,target=/style-mix style-mix:$GITHUB_RUN_ID 
     - uses: actions/checkout@v1
     - name: check status
       if: steps[*].outcome == 'cancelled' || ${{ cancelled() }}
@@ -49,11 +50,13 @@ jobs:
     timeout-minutes: 1
     steps:
     - uses: actions/checkout@v1
+    - name: Run streamlit
+      run: docker build -t str_im . && docker run -p 8501:8501 --mount type=bind,source=$base_path,target=/style-mix str_im 
     - name: move models
-      run: sudo cp -r /home/adminuser/actions-runner/_work/models /home/adminuser/actions-runner/_work/style-mix/style-mix/ 
-    - uses: actions/checkout@v1
+      run: sudo cp -r /home/adminuser/actions-runner/_work/models /home/adminuser/actions-runner/_work/style-mix/ 
     - name: give permission  
       run: sudo chmod +777 -f $mod_path 
+  
       
    
     
