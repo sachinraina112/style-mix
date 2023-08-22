@@ -15,7 +15,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Remove model for git cleanup
-      run:  sudo rm -r -f $mod_path
+      run:  sudo chmod +777 $mod_path && sudo rm -r -f $mod_path
     - uses: actions/checkout@v1
     - name: Install Docker
       run: sudo chmod +777 code/* && sudo ./code/install_docker.sh
