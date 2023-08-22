@@ -24,6 +24,7 @@ import json
 import sys
 import signal
 import traceback
+from s3_url import get_url
 
 
 #app for web app
@@ -54,9 +55,6 @@ def convert_to_tensor(dicts):
 def get_styled_image(pre_trained_model, mean_tn, std_tn, con_im, sty_im,
                         input_img, cl, sl, root):
     random = str(uuid.uuid4())
-
-    name_of_input = input_img.split("/")[-1]
-    name_of_input = name_of_input.split(".")[0] + f"-{random}"
     im_obj = showImage()
     cont_tensor, _ = im_obj.image_loader(con_im)
     sty_tensor, _ = im_obj.image_loader(sty_im)
@@ -74,11 +72,14 @@ def get_styled_image(pre_trained_model, mean_tn, std_tn, con_im, sty_im,
         output = run_style_transfer(pre_trained_model, mean_tn, std_tn,
                                 cont_tensor, sty_tensor, inp_tensor,cl, sl)
 
-        title = f'Output_{name_of_input}'
+        title = f'Output_{random}'
         display(output, root, title=title)
-        path_to_output = root + title             
-
-        return output, path_to_output
+        path_to_output = root + title + ".jpg" 
+        print(path_to_output)         
+        url = get_url(path_to_output)
+        user_list = [path_to_output, url]
+        print(user_list)
+        return output, user_list
     else:
         raise Exception
 
@@ -132,7 +133,7 @@ class StyleServiceML(object):
         blend_intensity = res_data["intensity"] # style intensity-low/high
         if blend_type == "only-style":
             input_img = content_img
-        elif blend_type == "style+content":
+        elif blend_type == "style-content" or blend_type == "new-blend":
             input_img = path_to_images + res_data["input_name"]
         else:
             raise Exception("Unsupported blend_type for style transfer")
@@ -144,13 +145,13 @@ class StyleServiceML(object):
         cnn_normalization_mean = torch.tensor([0.485, 0.456, 0.406])
         cnn_normalization_std = torch.tensor([0.229, 0.224, 0.225])
         
-        output, path_to_output = get_styled_image(cnn, cnn_normalization_mean, cnn_normalization_std,
+        output, user_list = get_styled_image(cnn, cnn_normalization_mean, cnn_normalization_std,
                                 content_img, style_img, input_img, content_layers_default, style_layers_default, base_out_path)
         if not res_data["tensor"]:
             out = []
         else:
             out = convert_tensor_to_response(output)
-        return out, path_to_output
+        return out, user_list
 
 
 

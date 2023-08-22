@@ -1,0 +1,11 @@
+s3_config:
+  user: 'UrTzHuI6UDZYChDVa67BJuTot/v8dNXg1i8w/IwT/OeGkFQ5Bpp9/f+b19FBgKP9'
+  key: 'HgyEhVZPT98hDjXyqFwvTBCzuQvPCHVIWmNXCpGXmv+RjZBJdSGQO9Pqtvzetzm6A0xr5aVSa7UakxmftTs7wA=='
+  region: ap-south-1
+  bucket: stybucket
+path_config:
+  data: ../data/
+  model: ../models/
+url_config:
+  ip: 20.219.92.5
+  port: 9999
