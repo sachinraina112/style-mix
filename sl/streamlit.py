@@ -5,6 +5,7 @@ from configs.AppConfig import path_config
 import uuid
 import os
 from result import get_result
+from s3_url import get_url
 
 
 input_path = os.path.join(path_config["data"], "input/")
@@ -53,8 +54,10 @@ if blend_type == "only-style":
             ims = Image.open(imagefile).convert('RGB')
             save_name_input = input_path + random
             ims.save(save_name_input)
-            random_list = [random, "wave.jpg", random] 
-            result_link = get_result(random_list, blend_type, intensity)
+            url_1 = get_url(save_name_input)
+            random_list = [random, "wave.jpg", random]
+            url_list = [url_1, False, False] 
+            result_link = get_result(random_list, blend_type, intensity, url_list)
             st.header("Output Image")
             st.markdown(f"**{output_description}**")
             st.image(result_link)
@@ -81,6 +84,7 @@ if blend_type == "style-content":
             ims = Image.open(imagefile).convert('RGB')
             save_name_input = input_path + random
             ims.save(save_name_input)
+            url_1 = get_url(save_name_input)
             
 
         st.subheader("Upload Style Image")
@@ -100,11 +104,12 @@ if blend_type == "style-content":
             ims2 = Image.open(imagefile2).convert('RGB')
             save_name_input = input_path + random2
             ims2.save(save_name_input)
+            url_2 = get_url(save_name_input)
 
         if Uploadimage_content and Uploadimage_style:
             random_list = [random, random2 , random] 
-            print(random_list)
-            result_link = get_result(random_list, blend_type, intensity)
+            url_list = [url_1, url_2, False]
+            result_link = get_result(random_list, blend_type, intensity, url_list)
             st.header("Output Image")
             st.markdown(f"**{output_description}**")
             st.image(result_link)
@@ -129,6 +134,7 @@ if blend_type == "new-blend":
             ims = Image.open(imagefile).convert('RGB')
             save_name_input = input_path + random
             ims.save(save_name_input)
+            url_1 = get_url(save_name_input)
 
 
         st.subheader("Upload Style Image")
@@ -146,6 +152,7 @@ if blend_type == "new-blend":
             ims2 = Image.open(imagefile2).convert('RGB')
             save_name_input = input_path + random2
             ims2.save(save_name_input)
+            url_2 = get_url(save_name_input)
 
         st.subheader("Upload Input Image to be changed")
         Uploadimage_inp = st.file_uploader('Choose the input image to upload')
@@ -162,11 +169,12 @@ if blend_type == "new-blend":
             ims3 = Image.open(imagefile3).convert('RGB')
             save_name_input = input_path + random3
             ims3.save(save_name_input)
+            url_3 = get_url(save_name_input)
 
         if Uploadimage_content and Uploadimage_style and Uploadimage_inp:
             random_list = [random, random2 , random3] 
-            print(random_list)
-            result_link = get_result(random_list, blend_type, intensity)
+            url_list = [url_1, url_2, url_3]
+            result_link = get_result(random_list, blend_type, intensity, url_list)
             st.header("Output Image")
             st.markdown(f"**{output_description}**")
             st.image(result_link)

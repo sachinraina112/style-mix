@@ -25,6 +25,10 @@ import sys
 import signal
 import traceback
 from s3_url import get_url
+import requests
+from io import BytesIO
+
+
 
 
 #app for web app
@@ -33,6 +37,27 @@ app = Flask(__name__)
 def display(im, root=None, title=None):
     im_obj = showImage()
     im_obj.im_show(im, root, title)
+
+
+def save_from_pil(im):
+    imsize = (512,512) if torch.cuda.is_available() else (128, 128)
+    loader = transforms.Compose([
+            transforms.Resize(imsize),  # scale imported image
+            transforms.ToTensor()])
+    image = loader(im).unsqueeze(0)
+    print(f" {list(image.size())}")
+    ten = image.to("cpu", torch.float)
+    print(type(ten))
+    return ten
+
+
+def tensor_from_link(url):
+    response = requests.get(url)
+    im = Image.open(BytesIO(response.content)).convert("RGB")
+    tensor = save_from_pil(im)
+    return tensor
+
+
 
 
 
@@ -56,21 +81,18 @@ def get_styled_image(pre_trained_model, mean_tn, std_tn, con_im, sty_im,
                         input_img, cl, sl, root):
     random = str(uuid.uuid4())
     im_obj = showImage()
-    cont_tensor, _ = im_obj.image_loader(con_im)
-    sty_tensor, _ = im_obj.image_loader(sty_im)
-    if im_obj.check_size(cont_tensor, sty_tensor):
-        if input_img == con_im:
-            inp_tensor = cont_tensor
-        else:
-            inp_tensor, _ = im_obj.image_loader(input_img)
+    # cont_tensor, _ = im_obj.image_loader(con_im)
+    # sty_tensor, _ = im_obj.image_loader(sty_im)
+
+    if im_obj.check_size(con_im, sty_im):
         
         inp_path = "../data/input/"
-        display(cont_tensor, inp_path,title="Content")
-        display(sty_tensor, inp_path,title="Style")
-        display(inp_tensor, inp_path,title="Input")
+        display(con_im, inp_path,title="Content")
+        display(sty_im, inp_path,title="Style")
+        display(input_img, inp_path,title="Input")
        
         output = run_style_transfer(pre_trained_model, mean_tn, std_tn,
-                                cont_tensor, sty_tensor, inp_tensor,cl, sl)
+                                con_im, sty_im, input_img,cl, sl)
 
         title = f'Output_{random}'
         display(output, root, title=title)
@@ -126,17 +148,28 @@ class StyleServiceML(object):
         prefix = res_data["blob_path"]  
         base_out_path = prefix + "output/"
         path_to_images = prefix + "input/"
-        content_img = path_to_images + res_data["cont_name"]
-        style_img = path_to_images + res_data["sty_name"]
-        print(content_img, style_img)
-        blend_type = res_data["type"] # only style, style+content, 
-        blend_intensity = res_data["intensity"] # style intensity-low/high
-        if blend_type == "only-style":
-            input_img = content_img
-        elif blend_type == "style-content" or blend_type == "new-blend":
-            input_img = path_to_images + res_data["input_name"]
+
+        cont_url =  res_data["cont_name"]
+        content_img = tensor_from_link(cont_url)
+        sty_url =  res_data["sty_name"]
+        if sty_url:
+            style_img = tensor_from_link(sty_url)
         else:
-            raise Exception("Unsupported blend_type for style transfer")
+            sty_path = "../data/input/wave.jpg"
+            ss = showImage()
+            style_img, _ = ss.image_loader(sty_path)
+        inp_url =  res_data["input_name"]
+        if inp_url:
+            input_img = tensor_from_link(inp_url)
+        else:
+            input_img = content_img
+        
+        # content_img = path_to_images + res_data["cont_name"]
+        # style_img = path_to_images + res_data["sty_name"]
+        print(type(content_img), type(style_img))
+        print(content_img.size(), style_img.size())
+        # blend_type = res_data["type"] # only style, style+content, 
+        blend_intensity = res_data["intensity"] # style intensity-low/high
         content_layers_default = ['conv_4']
         if  blend_intensity == "low":
             style_layers_default = ['conv_1', 'conv_2', 'conv_3'] #,'conv_4', 'conv_5']

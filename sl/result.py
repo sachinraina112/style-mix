@@ -4,8 +4,9 @@ from configs.AppConfig import url_config
 ip = str(url_config["ip"])
 port = str(url_config["port"])
 url = "http://" + ip + ":" + port + "/blend"
+print(f"Submitting request to url: {url}")
 
-def get_result(random, type, intensity):
+def get_result(random, type, intensity, urls):
     payload = {
 	"data": {
 		"blob_path": "../data/",
@@ -20,8 +21,8 @@ def get_result(random, type, intensity):
     }
     random = [str(i) for i in random]
     dictionary_data = payload["data"]
-    dictionary_data.update({"cont_name": random[0],"sty_name":random[1],
-                            "input_name": random[2], "type": type,
+    dictionary_data.update({"cont_name": urls[0],"sty_name":urls[1],
+                            "input_name": urls[2], "type": type,
                             "intensity": intensity})
     new_payload = {"data": dictionary_data}
 

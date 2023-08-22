@@ -14,6 +14,7 @@ def decrypt(var):
     return value
 
 
+
 def get_url(file, up=True):
     """Verify both boto3 and botocore clients stay in sync."""
     bucket = s3_config["bucket"]
