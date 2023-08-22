@@ -2,7 +2,7 @@ name: Docker Image CI
 env:
   ip: ${{vars.SERVER_IP}}
   mod_path: /home/adminuser/actions-runner/_work/style-mix/style-mix/models/
-  base_path: /home/adminuser/actions-runner/_work/
+  base_path: /home/adminuser/actions-runner/_work/style-mix/style-mix
   port: 9999
 on:
   push:
@@ -36,10 +36,8 @@ jobs:
     continue-on-error: true
     timeout-minutes: 1.5
     steps:
-    - uses: actions/checkout@v1
     - name: RunContainer
       run: sudo docker run -p $port:$port --mount type=bind,source=$base_path,target=/style-mix style-mix:$GITHUB_RUN_ID 
-    - uses: actions/checkout@v1
     - name: check status
       if: steps[*].outcome == 'cancelled' || ${{ cancelled() }}
       run: exit 0
@@ -53,7 +51,7 @@ jobs:
     - name: Run streamlit
       run: docker build -t str_im -f sl/Dockerfile_st . && docker run -p 8501:8501 --mount type=bind,source=$base_path,target=/style-mix str_im 
     - name: move models
-      run: sudo cp -r /home/adminuser/actions-runner/_work/models /home/adminuser/actions-runner/_work/style-mix/ 
+      run: sudo cp -r /home/adminuser/actions-runner/_work/models /home/adminuser/actions-runner/_work/style-mix/style-mix 
     - name: give permission  
       run: sudo chmod +777 -f $mod_path 
   
