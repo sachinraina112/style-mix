@@ -31,7 +31,7 @@ Also the intensity of style transfer can be increased or decreased based on inte
 ## CI/CD Inference via Github Actions
 The project implements Deep Learning Inference (backend) via CI/CD on Github Action workflow, so just a push to main branch of the repository will invoke build jobs, hence no need of manual intervention. 
 
-The frontend is hosted on Render.
+The [frontend](https://github.com/sachinraina112/frontend-style) is hosted on Render.
 
 
 ## References:
