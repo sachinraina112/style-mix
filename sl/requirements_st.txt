@@ -1,5 +1,0 @@
-Pillow
-matplotlib
-pyyaml==6.0.1
-streamlit
-requests

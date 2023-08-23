@@ -1,4 +1,7 @@
-__pycache__
+__pycache__/
+*.py[cod]
+*$py.class
+
 ../terraform/
 .terraform
 .tf
@@ -6,3 +9,5 @@ __pycache__
 .jpg
 code/configs/Encryption.py
 models/tensor.pt
+data/input/*.jpg
+data/output/*.jpg
