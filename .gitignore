@@ -10,4 +10,3 @@ __pycache__/
 code/configs/Encryption.py
 models/tensor.pt
 data/input/*.jpg
-data/output/*.jpg
